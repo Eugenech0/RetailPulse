@@ -1,0 +1,12 @@
+# Обязательные исключения
+node_modules/
+  .env
+  .DS_Store
+  *.log
+  dist/
+
+# Дополнительно
+.idea/
+.vscode/
+*.bak
+*.tmp
