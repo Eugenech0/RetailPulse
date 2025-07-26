@@ -5,12 +5,12 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    component: () => import('../views/HomeView.vue') // Используйте относительный путь
+    component: () => import('../views/HomeView.vue')
   },
   {
     path: '/about',
     name: 'About',
-    component: () => import('../views/AboutView.vue')
+    component: () => import('../views/HomeView.vue')
   }
 ]
 
