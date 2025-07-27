@@ -8,7 +8,9 @@
     "dev": "concurrently \"npm:start:server\" \"npm:start:client\""
   },
   "devDependencies": {
-    "concurrently": "^8.2.1"
+    "@types/node": "^24.1.0",
+    "concurrently": "^8.2.1",
+    "path": "^0.12.7"
   },
   "dependencies": {
     "vite": "^7.0.6",

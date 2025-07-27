@@ -90,19 +90,8 @@
     </main>
 
     <footer class="footer">
-      <div class="footer-content">
-        <div class="footer-section">
-          <h4>RetailPulse</h4>
-          <p>© 2025 RetailPulse. Все права защищены.</p>
-        </div>
-        
-        <div class="footer-section">
-          <h4>Контакты</h4>
-          <p>Email: support@retailpulse.ru</p>
-          <p>Телефон: +7 (800) 123-45-67</p>
-        </div>
-        
-        <div class="footer-section">
+
+      <div class="footer-section">
           <h4>Ресурсы</h4>
           <ul>
             <li><router-link to="/docs">Документация</router-link></li>
@@ -110,6 +99,18 @@
             <li><router-link to="/support">Поддержка</router-link></li>
           </ul>
         </div>
+
+      <div class="footer-content">
+        <div class="footer-section">
+          <h4>RetailPulse</h4>
+          <p>© 2025 RetailPulse. Все права защищены.</p>
+        </div>
+        
+        <address class="footer-section">
+          <h4>Контакты</h4>
+          <p>Email: support@retailpulse.ru</p>
+          <p>Телефон: +7 (800) 123-45-67</p>
+        </address>
       </div>
       
       <div class="footer-bottom">
