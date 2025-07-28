@@ -57,7 +57,7 @@
               <path fill="#9CA3AF" d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
             </svg>
             <input 
-              type="password" 
+              :type="showPassword ? 'text' : 'password'" 
               id="password" 
               v-model="password" 
               placeholder="••••••••"
@@ -119,6 +119,23 @@
       
       <div class="auth-footer">
         <p>Уже есть аккаунт? <router-link to="/login">Войти</router-link></p>
+        <div class="social-divider">
+          <span>Или зарегистрируйтесь через</span>
+        </div>
+        <div class="social-login">
+          <button class="social-btn google">
+            <svg width="20" height="20" viewBox="0 0 24 24">
+              <path fill="#EA4335" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm6.36 14.83c-1.43-1.74-4.9-1.33-6.36-1.33-.26 0-.51.02-.77.04l1.25 1.25c.59-.05 1.17-.15 1.74-.32.84-.25 1.5-.73 1.91-1.41.35-.59.54-1.31.54-2.05 0-.82-.22-1.57-.6-2.21h2.65V12h-7v-2h9.24c.1.53.16 1.08.16 1.65 0 2.34-1.1 4.46-3.12 5.18z"/>
+            </svg>
+            Google
+          </button>
+          <button class="social-btn microsoft">
+            <svg width="20" height="20" viewBox="0 0 24 24">
+              <path fill="#0078D7" d="M2 2h9v9H2V2zm9 9h9v9h-9v-9zm-9 9h9v9H2v-9zm9 0h9v9h-9v-9z"/>
+            </svg>
+            Microsoft
+          </button>
+        </div>
       </div>
     </section>
   </section>
@@ -211,15 +228,128 @@ export default {
     },
     togglePasswordVisibility() {
       this.showPassword = !this.showPassword;
-      const passwordInput = document.getElementById('password');
-      passwordInput.type = this.showPassword ? 'text' : 'password';
     }
   }
 };
 </script>
 
 <style scoped>
-/* Общие стили из LoginView */
+.auth-view {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.background-graphic {
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(79,70,229,0.05) 0%, transparent 70%);
+  z-index: 0;
+}
+
+.auth-container {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05), 0 20px 48px rgba(0, 0, 0, 0.05);
+  padding: 40px;
+  width: 100%;
+  max-width: 450px;
+  z-index: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+.brand-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.logo h1 {
+  margin: 0;
+  color: #1F2937;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.tagline {
+  color: #6B7280;
+  font-size: 16px;
+  margin: 0;
+}
+
+.auth-form {
+  margin-bottom: 24px;
+}
+
+.input-group {
+  margin-bottom: 20px;
+}
+
+.input-group label {
+  display: block;
+  color: #374151;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.input-with-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon {
+  position: absolute;
+  left: 14px;
+  z-index: 2;
+}
+
+.input-with-icon input {
+  width: 100%;
+  padding: 14px 14px 14px 44px;
+  border: 1px solid #E5E7EB;
+  border-radius: 10px;
+  font-size: 15px;
+  transition: all 0.3s ease;
+  background-color: #F9FAFB;
+  box-sizing: border-box;
+}
+
+.input-with-icon input:focus {
+  border-color: #4F46E5;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+  outline: none;
+  background-color: white;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 14px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
 .password-strength {
   margin-top: 8px;
@@ -283,6 +413,44 @@ export default {
   cursor: pointer;
 }
 
+.terms-agree input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.checkmark {
+  height: 18px;
+  width: 18px;
+  background-color: #F3F4F6;
+  border: 1px solid #D1D5DB;
+  border-radius: 4px;
+  margin-right: 8px;
+  position: relative;
+}
+
+.terms-agree input:checked ~ .checkmark {
+  background-color: #4F46E5;
+  border-color: #4F46E5;
+}
+
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+  left: 6px;
+  top: 2px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.terms-agree input:checked ~ .checkmark:after {
+  display: block;
+}
+
 .terms-agree a {
   color: #4F46E5;
   text-decoration: none;
@@ -293,5 +461,145 @@ export default {
 .terms-agree a:hover {
   color: #3730A3;
   text-decoration: underline;
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(to right, #4F46E5, #7C3AED);
+  border: none;
+  border-radius: 10px;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 7px 14px rgba(79, 70, 229, 0.25);
+}
+
+.submit-btn:active {
+  transform: translateY(0);
+}
+
+.submit-btn.loading {
+  pointer-events: none;
+}
+
+.spinner {
+  width: 24px;
+  height: 24px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 1s ease-in-out infinite;
+  margin: 0 auto;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.error-message {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #FEF2F2;
+  color: #EF4444;
+  padding: 12px;
+  border-radius: 8px;
+  margin-top: 20px;
+  font-size: 14px;
+}
+
+.auth-footer {
+  text-align: center;
+  color: #6B7280;
+  font-size: 14px;
+}
+
+.auth-footer p {
+  margin-bottom: 20px;
+}
+
+.auth-footer a {
+  color: #4F46E5;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s;
+}
+
+.auth-footer a:hover {
+  color: #3730A3;
+  text-decoration: underline;
+}
+
+.social-divider {
+  display: flex;
+  align-items: center;
+  margin: 20px 0;
+  color: #9CA3AF;
+  font-size: 13px;
+}
+
+.social-divider::before,
+.social-divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid #E5E7EB;
+}
+
+.social-divider span {
+  padding: 0 12px;
+}
+
+.social-login {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.social-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  background: white;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.social-btn:hover {
+  background: #F9FAFB;
+  transform: translateY(-2px);
+}
+
+.social-btn.google {
+  color: #EA4335;
+}
+
+.social-btn.microsoft {
+  color: #0078D7;
+}
+
+@media (max-width: 480px) {
+  .auth-container {
+    padding: 30px 20px;
+  }
+  
+  .social-login {
+    flex-direction: column;
+  }
 }
 </style>
