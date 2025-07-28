@@ -42,46 +42,46 @@
       </section>
 
       <section class="advantages-section">
-    <h2 class="section-title">Наши преимущества</h2>
-    
-    <div class="carousel-container">
-      <div class="carousel-track" :style="{ transform: `translateX(${position}%)` }">
-        <div 
-          v-for="(advantage, index) in advantages" 
-          :key="index"
-          class="advantage-card"
-          :class="{ active: currentIndex === index }"
-        >
-          <div class="advantage-icon">{{ advantage.icon }}</div>
-          <h3 class="advantage-title">{{ advantage.title }}</h3>
-          <p class="advantage-description">{{ advantage.description }}</p>
+        <h2 class="section-title">Наши преимущества</h2>
+        
+        <div class="carousel-container">
+          <div class="carousel-track" :style="{ transform: `translateX(${position}%)` }">
+            <div 
+              v-for="(advantage, index) in advantages" 
+              :key="index"
+              class="advantage-card"
+              :class="{ active: currentIndex === index }"
+            >
+              <div class="advantage-icon">{{ advantage.icon }}</div>
+              <h3 class="advantage-title">{{ advantage.title }}</h3>
+              <p class="advantage-description">{{ advantage.description }}</p>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-    
-    <div class="carousel-indicators">
-      <button 
-        v-for="(_, index) in advantages" 
-        :key="index"
-        :class="{ active: currentIndex === index }"
-        @click="goToSlide(index)"
-        aria-label="Перейти к слайду"
-      ></button>
-    </div>
-    
-    <div class="carousel-controls">
-      <button class="control-btn prev" @click="prevSlide">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-          <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
-        </svg>
-      </button>
-      <button class="control-btn next" @click="nextSlide">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-          <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
-        </svg>
-      </button>
-    </div>
-  </section>
+        
+        <div class="carousel-indicators">
+          <button 
+            v-for="(_, index) in advantages" 
+            :key="index"
+            :class="{ active: currentIndex === index }"
+            @click="goToSlide(index)"
+            aria-label="Перейти к слайду"
+          ></button>
+        </div>
+        
+        <div class="carousel-controls">
+          <button class="control-btn prev" @click="prevSlide" aria-label="Предыдущий слайд">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+            </svg>
+          </button>
+          <button class="control-btn next" @click="nextSlide" aria-label="Следующий слайд">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+            </svg>
+          </button>
+        </div>
+      </section>
 
       <section class="cta-section">
         <h2>Начните использовать RetailPulse уже сегодня!</h2>
@@ -90,20 +90,19 @@
     </main>
 
     <footer class="footer">
-
-      <div class="footer-section">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h4>RetailPulse</h4>
+          <p>© 2025 RetailPulse. Все права защищены.</p>
+        </div>
+        
+        <div class="footer-section">
           <h4>Ресурсы</h4>
           <ul>
             <li><router-link to="/docs">Документация</router-link></li>
             <li><router-link to="/blog">Блог</router-link></li>
             <li><router-link to="/support">Поддержка</router-link></li>
           </ul>
-        </div>
-
-      <div class="footer-content">
-        <div class="footer-section">
-          <h4>RetailPulse</h4>
-          <p>© 2025 RetailPulse. Все права защищены.</p>
         </div>
         
         <address class="footer-section">
@@ -123,13 +122,12 @@
 <script>
 export default {
   name: 'HomeView',
-  
-  name: 'AdvantagesSection',
   data() {
     return {
       currentIndex: 0,
       position: 0,
       interval: null,
+      slidesPerView: 1,
       advantages: [
         {
           icon: '🎯',
@@ -160,12 +158,25 @@ export default {
     }
   },
   mounted() {
+    this.calculateSlidesPerView();
+    window.addEventListener('resize', this.calculateSlidesPerView);
     this.startAutoSlide();
   },
   beforeUnmount() {
+    window.removeEventListener('resize', this.calculateSlidesPerView);
     this.stopAutoSlide();
   },
   methods: {
+    calculateSlidesPerView() {
+      const width = window.innerWidth;
+      if (width >= 992) {
+        this.slidesPerView = 3;
+      } else if (width >= 768) {
+        this.slidesPerView = 2;
+      } else {
+        this.slidesPerView = 1;
+      }
+    },
     startAutoSlide() {
       this.interval = setInterval(() => {
         this.nextSlide();
@@ -178,16 +189,30 @@ export default {
       }
     },
     goToSlide(index) {
+      this.stopAutoSlide();
       this.currentIndex = index;
-      this.position = -index * 100;
+      this.updatePosition();
+      this.startAutoSlide();
     },
     nextSlide() {
-      this.currentIndex = (this.currentIndex + 1) % this.advantages.length;
-      this.position = -this.currentIndex * 100;
+      if (this.currentIndex < this.advantages.length - this.slidesPerView) {
+        this.currentIndex++;
+      } else {
+        this.currentIndex = 0;
+      }
+      this.updatePosition();
     },
     prevSlide() {
-      this.currentIndex = (this.currentIndex - 1 + this.advantages.length) % this.advantages.length;
-      this.position = -this.currentIndex * 100;
+      if (this.currentIndex > 0) {
+        this.currentIndex--;
+      } else {
+        this.currentIndex = this.advantages.length - this.slidesPerView;
+      }
+      this.updatePosition();
+    },
+    updatePosition() {
+      // Рассчитываем позицию с учетом количества видимых слайдов
+      this.position = -(this.currentIndex * (100 / this.slidesPerView));
     }
   }
 }
@@ -200,6 +225,7 @@ export default {
   min-height: 100vh;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   color: #333;
+  background-color: #f8f9fa;
 }
 
 /* Header Styles */
@@ -222,6 +248,7 @@ export default {
   font-size: 2rem;
   font-weight: 700;
   margin: 0;
+  color: white;
 }
 
 .auth-links {
@@ -235,6 +262,7 @@ export default {
   padding: 0.5rem 1rem;
   border-radius: 4px;
   transition: background-color 0.3s;
+  font-weight: 500;
 }
 
 .auth-link:hover {
@@ -251,7 +279,7 @@ export default {
 
 .header-tagline {
   max-width: 1200px;
-  margin: 3rem auto;
+  margin: 4rem auto 3rem;
   padding: 0 2rem;
   text-align: center;
 }
@@ -259,11 +287,14 @@ export default {
 .header-tagline h2 {
   font-size: 2.5rem;
   margin-bottom: 1rem;
+  font-weight: 700;
 }
 
 .header-tagline p {
   font-size: 1.2rem;
   opacity: 0.9;
+  max-width: 700px;
+  margin: 0 auto;
 }
 
 /* Main Content Styles */
@@ -284,31 +315,46 @@ export default {
 
 .feature-card {
   background: white;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  padding: 2rem 1.5rem;
   text-align: center;
-  transition: transform 0.3s;
+  transition: all 0.3s ease;
+  border: 1px solid #eee;
 }
 
 .feature-card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-8px);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.12);
 }
 
 .feature-icon {
-  font-size: 3rem;
-  margin-bottom: 1rem;
+  font-size: 3.5rem;
+  margin-bottom: 1.5rem;
+  transition: transform 0.3s;
+}
+
+.feature-card:hover .feature-icon {
+  transform: scale(1.1);
+}
+
+.feature-card h3 {
+  font-size: 1.4rem;
+  margin-bottom: 0.8rem;
+  color: #2c3e50;
+}
+
+.feature-card p {
+  color: #7f8c8d;
+  line-height: 1.6;
+  margin: 0;
 }
 
 .advantages-section {
   position: relative;
-  padding: 4rem 2rem;
-  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-  border-radius: 20px;
-  margin: 5rem auto;
-  max-width: 1200px;
+  padding: 4rem 0;
+  margin: 5rem 0;
   overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
 }
 
 .section-title {
@@ -320,6 +366,7 @@ export default {
   display: inline-block;
   left: 50%;
   transform: translateX(-50%);
+  font-weight: 700;
 }
 
 .section-title::after {
@@ -334,7 +381,6 @@ export default {
   border-radius: 2px;
 }
 
-
 .carousel-container {
   width: 100%;
   overflow: hidden;
@@ -345,26 +391,28 @@ export default {
 .carousel-track {
   display: flex;
   transition: transform 0.6s cubic-bezier(0.25, 0.1, 0.25, 1);
+  gap: 30px;
+  padding: 0 15px;
 }
 
 .advantage-card {
-  flex: 0 0 100%;
-  min-width: 100%;
-  padding: 2.5rem;
+  flex: 0 0 calc(100% - 30px);
+  min-width: calc(100% - 30px);
+  padding: 2.5rem 1.5rem;
   background: white;
   border-radius: 20px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
   text-align: center;
-  transition: all 0.5s ease;
-  transform: scale(0.9);
-  opacity: 0.7;
   position: relative;
   z-index: 1;
+  opacity: 0.7;
+  transform: scale(0.95);
+  transition: all 0.6s ease;
 }
 
 .advantage-card.active {
-  transform: scale(1);
   opacity: 1;
+  transform: scale(1);
   z-index: 2;
   box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
 }
@@ -376,7 +424,6 @@ export default {
 }
 
 .advantage-card.active .advantage-icon {
-  transform: scale(1.15) rotate(5deg);
   animation: pulse 2s infinite;
 }
 
@@ -386,6 +433,7 @@ export default {
   margin-bottom: 1.2rem;
   position: relative;
   display: inline-block;
+  font-weight: 600;
 }
 
 .advantage-title::after {
@@ -485,23 +533,141 @@ export default {
 
 /* Анимации */
 @keyframes pulse {
-  0% { transform: scale(1.15) rotate(5deg); }
-  50% { transform: scale(1.25) rotate(0); }
-  100% { transform: scale(1.15) rotate(5deg); }
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+.cta-section {
+  text-align: center;
+  margin: 6rem 0 4rem;
+  padding: 4rem 2rem;
+  background: linear-gradient(135deg, #1a2a6c, #2a5298);
+  border-radius: 16px;
+  color: white;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.cta-section h2 {
+  font-size: 2.2rem;
+  margin-bottom: 2rem;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cta-button {
+  display: inline-block;
+  background-color: #4CAF50;
+  color: white;
+  padding: 1rem 3rem;
+  border-radius: 50px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1.2rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border: 2px solid transparent;
+}
+
+.cta-button:hover {
+  background-color: #45a049;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Footer Styles */
+.footer {
+  background-color: #2c3e50;
+  color: #ecf0f1;
+  padding: 3rem 0 0;
+  margin-top: auto;
+}
+
+.footer-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 3rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.footer-section {
+  margin-bottom: 2rem;
+}
+
+.footer-section h4 {
+  font-size: 1.3rem;
+  margin-bottom: 1.5rem;
+  color: #3498db;
+  position: relative;
+  padding-bottom: 0.5rem;
+}
+
+.footer-section h4::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 50px;
+  height: 3px;
+  background: #3498db;
+  border-radius: 2px;
+}
+
+.footer-section p {
+  margin: 0.8rem 0;
+  line-height: 1.6;
+}
+
+.footer-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-section ul li {
+  margin-bottom: 0.8rem;
+}
+
+.footer-section a {
+  color: #bdc3c7;
+  text-decoration: none;
+  transition: color 0.3s;
+  display: inline-block;
+}
+
+.footer-section a:hover {
+  color: #3498db;
+  transform: translateX(5px);
+}
+
+.footer-bottom {
+  background-color: #1a252f;
+  padding: 1.5rem 0;
+  text-align: center;
+  margin-top: 3rem;
+}
+
+.footer-bottom p {
+  margin: 0;
+  font-size: 0.95rem;
+  opacity: 0.8;
 }
 
 /* Адаптивность */
 @media (min-width: 768px) {
   .advantage-card {
-    flex: 0 0 50%;
-    min-width: 50%;
+    flex: 0 0 calc(50% - 30px);
+    min-width: calc(50% - 30px);
   }
 }
 
 @media (min-width: 992px) {
   .advantage-card {
-    flex: 0 0 33.333%;
-    min-width: 33.333%;
+    flex: 0 0 calc(33.333% - 30px);
+    min-width: calc(33.333% - 30px);
   }
   
   .carousel-controls {
@@ -515,107 +681,71 @@ export default {
 }
 
 @media (max-width: 767px) {
+  .header-content {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .header-tagline {
+    margin: 2rem auto;
+  }
+  
+  .header-tagline h2 {
+    font-size: 2rem;
+  }
+  
   .advantages-section {
-    padding: 3rem 1rem;
+    padding: 3rem 0;
+    margin: 3rem 0;
   }
   
   .section-title {
     font-size: 2rem;
   }
   
-  .advantage-card {
-    padding: 1.8rem;
+  .carousel-controls {
+    display: none;
+  }
+  
+  .cta-section {
+    padding: 3rem 1.5rem;
+  }
+  
+  .cta-section h2 {
+    font-size: 1.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .features {
+    grid-template-columns: 1fr;
+  }
+  
+  .header-tagline h2 {
+    font-size: 1.8rem;
+  }
+  
+  .section-title {
+    font-size: 1.8rem;
   }
   
   .advantage-title {
     font-size: 1.5rem;
   }
   
-  .carousel-controls {
-    display: none;
+  .advantage-description {
+    font-size: 1rem;
   }
-}
-
-.cta-section {
-  text-align: center;
-  margin: 4rem 0;
-  padding: 3rem;
-  background-color: #f8f9fa;
-  border-radius: 8px;
-}
-
-.cta-section h2 {
-  margin-bottom: 1.5rem;
-}
-
-.cta-button {
-  display: inline-block;
-  background-color: #2a5298;
-  color: white;
-  padding: 1rem 2rem;
-  border-radius: 4px;
-  text-decoration: none;
-  font-weight: 600;
-  font-size: 1.1rem;
-  transition: background-color 0.3s;
-}
-
-.cta-button:hover {
-  background-color: #1a2a6c;
-}
-
-/* Footer Styles */
-.footer {
-  background-color: #2c3e50;
-  color: #ecf0f1;
-  padding: 2rem 0 0;
-}
-
-.footer-content {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 2rem;
-}
-
-.footer-section {
-  margin-bottom: 2rem;
-}
-
-.footer-section h4 {
-  font-size: 1.2rem;
-  margin-bottom: 1rem;
-  color: #3498db;
-}
-
-.footer-section p {
-  margin: 0.5rem 0;
-}
-
-.footer-section a {
-  color: #bdc3c7;
-  text-decoration: none;
-  display: block;
-  margin: 0.5rem 0;
-  transition: color 0.3s;
-}
-
-.footer-section a:hover {
-  color: #3498db;
-}
-
-.footer-bottom {
-  background-color: #1a252f;
-  padding: 1rem 0;
-  text-align: center;
-  margin-top: 2rem;
-}
-
-.footer-bottom p {
-  margin: 0;
-  font-size: 0.9rem;
-  opacity: 0.8;
+  
+  .carousel-track {
+    gap: 15px;
+    padding: 0 10px;
+  }
+  
+  .advantage-card {
+    flex: 0 0 calc(100% - 20px);
+    min-width: calc(100% - 20px);
+    padding: 1.5rem;
+  }
 }
 </style>
