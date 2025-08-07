@@ -4,7 +4,7 @@
     
     <div class="search-bar">
       <input type="text" placeholder="Поиск клиента..." v-model="searchQuery">
-      <button click="showAddForm = true" class="btn-add">+ Добавить клиента</button>
+      <button @click="showAddForm = true" class="btn-add">+ Добавить клиента</button>
     </div>
     
     <table class="customer-table">
@@ -26,7 +26,7 @@
           <td>{{ customer.ordersCount }}</td>
           <td>{{ customer.totalSpent }} ₽</td>
           <td>
-            <button click="editCustomer(customer)">✏️</button>
+            <button @click="editCustomer(customer)">✏️</button>
             <button @click="viewCustomer(customer)">👁️</button>
           </td>
         </tr>
@@ -55,7 +55,7 @@ export default {
         customer.email.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
         customer.phone.includes(this.searchQuery)
       )
-    
+    }
   },
   methods: {
     editCustomer(customer) {
@@ -65,7 +65,6 @@ export default {
       this.$router.push(`/customer/${customer.id}`);
     }
   }
-}
 }
 
 </script>

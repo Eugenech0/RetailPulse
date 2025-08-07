@@ -76,14 +76,20 @@ export default {
   },
   computed: {
     showNavigation() {
-      const authRoutes = ['Login', 'Register', 'NotFound']
-      return !authRoutes.includes(this.$route.name)
+      const protectedRoutes = [
+        'Dashboard', 
+        'Products', 
+        'Customers', 
+        'Orders', 
+        'Analytics'
+      ];
+      return protectedRoutes.includes(this.$route.name);
     }
   },
   methods: {
     logout() {
-      localStorage.removeItem('token')
-      this.$router.push('/login')
+      localStorage.removeItem('token');
+      this.$router.push('/');
     }
   }
 }
