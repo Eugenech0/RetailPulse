@@ -1,41 +1,21 @@
 <template>
   <div class="home-view">
     <header class="header">
-      <div class="header-content">
+      <section class="header-content">
         <h1 class="logo">RetailPulse</h1>
         <nav class="auth-links">
           <router-link to="/login" class="auth-link">Вход</router-link>
           <router-link to="/register" class="auth-link auth-link--primary">Регистрация</router-link>
           <router-link to="/dashboard" class="dashboard">Следующее окно</router-link>
         </nav>
-      </div>
-      <div class="header-tagline">
-        <h2>Увеличьте прибыль вашего магазина на 30% за 3 месяца</h2>
-        <p>Автоматизация розничных продаж, управление запасами и лояльностью клиентов в одной системе</p>
-      </div>
+      </section>
+      <section class="header-tagline">
+        <h2>Интеллектуальная система управления бизнеса</h2>
+        <p>Автоматизация бизнес-процессов. Удобное добавление, просмотр изменений, аналитика с граффиками. Бесплатный старт и многое другое</p>
+      </section>
     </header>
 
     <main class="main-content">
-      <!-- Блок с цифрами -->
-      <section class="stats-section">
-        <div class="stat-card">
-          <div class="stat-value">+27%</div>
-          <div class="stat-label">Средний чек</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-value">+40%</div>
-          <div class="stat-label">Повторные покупки</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-value">-15%</div>
-          <div class="stat-label">Логистические расходы</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-value">3000+</div>
-          <div class="stat-label">Довольных клиентов</div>
-        </div>
-      </section>
-
       <!-- Блок фич -->
       <section class="features">
         <div class="feature-card">
@@ -557,7 +537,6 @@ export default {
   margin: 0;
 }
 
-/* Trusted Section */
 .trusted-section {
   background: linear-gradient(to right, #f8f9fa, #ffffff);
   padding: 4rem 2rem;
@@ -569,13 +548,12 @@ export default {
 
 .section-title {
   text-align: center;
+  justify-content: center;
   font-size: 2.5rem;
   color: #2c3e50;
   margin-bottom: 3rem;
   position: relative;
-  display: inline-block;
-  left: 50%;
-  transform: translateX(-50%);
+  display: flex;
   font-weight: 700;
 }
 
